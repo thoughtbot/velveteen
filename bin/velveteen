@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "velveteen/cli"
+
+Velveteen::CLI.new(argv: ARGV.dup).call
