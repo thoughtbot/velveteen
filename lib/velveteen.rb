@@ -4,4 +4,5 @@ require "velveteen/version"
 
 module Velveteen
   class Error < StandardError; end
+  class InvalidMessage < Error; end
 end

@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "bunny", "~> 2.14"
+  spec.add_runtime_dependency "json-schema", "~> 2.8"
 end

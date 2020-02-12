@@ -26,16 +26,15 @@ module Velveteen
       worker_class = Object.const_get(worker_class_name)
 
       begin
-        worker = worker_class.new(channel: channel)
+        exchange = channel.topic(worker_class.exchange_name, durable: true)
+        queue = channel.queue(worker_class.queue_name, durable: true)
+        queue.bind(exchange, routing_key: worker_class.routing_key)
 
-        worker.queue.subscribe(manual_ack: true, block: true) do |delivery_info, _properties, body|
-          data = JSON.parse(body, symbolize_names: true)
-          worker.perform(
-            Message.new(
-              data: data[:data],
-              ancillary: data[:ancillary],
-            )
-          )
+        queue.subscribe(manual_ack: true, block: true) do |delivery_info, _properties, body|
+          worker_class.new(
+            exchange: exchange,
+            message_body: body,
+          ).perform
 
           channel.ack(delivery_info.delivery_tag)
         end
