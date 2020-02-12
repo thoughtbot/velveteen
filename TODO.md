@@ -1,6 +1,5 @@
 TODO:
 
-* set up Standard
 * rate limiting
 * error handling, exponential backoff
 * message structure validation
