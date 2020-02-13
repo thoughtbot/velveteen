@@ -14,7 +14,7 @@ module Velveteen
     def call
       stdout.sync = true
       if command == "work"
-        Commands::Work.new(argv: argv, stdout: stdout).call
+        Commands::Work.call(argv: argv, stdout: stdout)
       end
     end
 
