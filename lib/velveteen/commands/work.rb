@@ -70,8 +70,17 @@ module Velveteen
           message_body: body,
         )
 
+        if worker.rate_limited?
+          TakeToken.call(worker: worker)
+        end
+
         worker.perform
       end
+    end
+  end
+
+  class TakeToken
+    def self.call
     end
   end
 end

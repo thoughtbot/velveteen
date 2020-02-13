@@ -7,7 +7,13 @@ module Velveteen
     attr_reader :exchange, :message
 
     class << self
-      attr_accessor :exchange_name, :queue_name, :routing_key, :message_schema
+      attr_accessor(
+        :exchange_name,
+        :message_schema,
+        :queue_name,
+        :rate_limit_key,
+        :routing_key,
+      )
     end
 
     def initialize(exchange:, message_body:)
@@ -24,6 +30,10 @@ module Velveteen
       )
     rescue JSON::ParserError => e
       raise InvalidMessage.new(e)
+    end
+
+    def rate_limited?
+      !!self.class.rate_limit_key
     end
 
     private
