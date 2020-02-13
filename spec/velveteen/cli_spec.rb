@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require "velveteen/cli"
 
 RSpec.describe Velveteen::CLI do

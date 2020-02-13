@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require "velveteen/commands/work"
 require "velveteen/worker"
 

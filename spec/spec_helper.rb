@@ -1,6 +1,5 @@
 require "bundler/setup"
 require "bunny-mock"
-require "pry"
 
 require "velveteen"
 

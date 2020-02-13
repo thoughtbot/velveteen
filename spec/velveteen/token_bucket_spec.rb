@@ -1,5 +1,4 @@
 require "timecop"
-require "spec_helper"
 
 require "velveteen/token_bucket"
 
