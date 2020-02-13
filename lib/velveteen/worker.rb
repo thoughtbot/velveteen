@@ -20,7 +20,7 @@ module Velveteen
 
       @message = Message.new(
         data: json_message[:data],
-        ancillary: json_message[:ancillary],
+        metadata: json_message[:metadata],
       )
     rescue JSON::ParserError => e
       raise InvalidMessage.new(e)
