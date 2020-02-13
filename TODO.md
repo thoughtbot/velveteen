@@ -14,6 +14,8 @@ TODO:
   * message schema directory
   * exchange name
 * print warning when worker has no schema
+* error messages that are helpful
+  * e.g. missing exchange/queue/etc name
 
 Concerns:
 
