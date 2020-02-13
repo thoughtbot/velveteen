@@ -25,11 +25,7 @@ module Velveteen
         require File.expand_path(worker_file)
         worker_class = Object.const_get(worker_class_name)
 
-        begin
-          RunWorker.new(channel: channel, worker_class: worker_class).call
-        rescue Interrupt => _
-          connection.close
-        end
+        RunWorker.new(channel: channel, worker_class: worker_class).call
       end
 
       private

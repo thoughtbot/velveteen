@@ -11,6 +11,7 @@ RSpec.describe TokenBucket do
       channel = BUNNY_CONNECTION.channel
       token_bucket = TokenBucket.new(
         channel: channel,
+        exchange_name: "foo",
         key: "foo",
         per_minute: 120,
       )
@@ -30,6 +31,7 @@ RSpec.describe TokenBucket do
         queue = channel.queue(key)
         token_bucket = TokenBucket.new(
           channel: channel,
+          exchange_name: "foo",
           key: key,
           per_minute: per_minute,
         )
@@ -52,6 +54,7 @@ RSpec.describe TokenBucket do
       channel = double(BUNNY_CONNECTION.start.channel, basic_ack: true, queue: queue, topic: true)
       token_bucket = TokenBucket.new(
         channel: channel,
+        exchange_name: "foo",
         key: key,
         per_minute: per_minute,
       )

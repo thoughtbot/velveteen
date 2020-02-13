@@ -3,13 +3,11 @@ require "json"
 require "time"
 
 class TokenBucket
-  EXCHANGE_NAME = "foo"
-
-  def initialize(channel:, per_minute:, key:)
+  def initialize(channel:, exchange_name:, per_minute:, key:)
     @channel = channel
     @key = key
     @per_minute = per_minute
-    @exchange = @channel.topic(EXCHANGE_NAME, durable: true)
+    @exchange = @channel.topic(exchange_name, durable: true)
     @queue = @channel.queue(
       key,
       durable: true,
