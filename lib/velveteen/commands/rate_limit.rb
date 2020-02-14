@@ -1,3 +1,4 @@
+require "velveteen/config"
 require "velveteen/token_bucket"
 
 module Velveteen
@@ -7,8 +8,7 @@ module Velveteen
         new(*args).call
       end
 
-      def initialize(argv:, stdout:, config:)
-        @config = config
+      def initialize(argv:, stdout:)
         @exchange_name = argv.shift
         @routing_key = argv.shift
         @per_minute = argv.shift.to_f
@@ -18,7 +18,7 @@ module Velveteen
       def call
         stdout.puts "rate limiting #{routing_key} at #{per_minute} per minute"
         stdout.puts "CTRL+C to stop"
-        channel = config.connection.create_channel
+        channel = Config.connection.create_channel
         token_bucket = TokenBucket.new(
           channel: channel,
           exchange_name: exchange_name,

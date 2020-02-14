@@ -8,10 +8,9 @@ RSpec.describe Velveteen::Commands::RateLimit do
       test-rate-limit-key
       300
     ]
-    config = double(connection: BunnyMock.new.start)
+    Velveteen::Config.connection = BunnyMock.new.start
     rate_limit = described_class.new(
       argv: argv,
-      config: config,
       stdout: StringIO.new,
     )
     token_bucket = instance_double(TokenBucket, produce: true, duration: 0.2)

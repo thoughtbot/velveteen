@@ -13,11 +13,7 @@ module Velveteen
       end
 
       def call
-        # TODO: What settings need/should be set here?
-        connection = Mock.new
-        connection.start
-
-        channel = connection.create_channel
+        channel = Config.connection.create_channel
         channel.prefetch(1)
 
         stdout.puts " [*] Waiting for messages. To exit press CTRL+C"
@@ -76,7 +72,15 @@ module Velveteen
   end
 
   class TakeToken
-    def self.call
+    def self.call(worker:)
+      # TODO: this is too much info for consuming
+      token_bucket = TokenBucket.new(
+        channel: Config.connection.create_channel,
+        exchange_name: worker.exchange_name,
+        per_minute: 600, # TODO: pull this from config
+        key: worker.rate_limit_key,
+      )
+      token_bucket.take
     end
   end
 end

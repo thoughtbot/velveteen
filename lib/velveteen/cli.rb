@@ -13,24 +13,24 @@ module Velveteen
     end
 
     def call
-      stdout.sync = true
-      config = Config.new(connection: Bunny.new.start)
+      if Config.connection.nil?
+        Config.connection = Bunny.new.start
+      end
 
+      stdout.sync = true
       if command == "work"
         Commands::Work.call(argv: argv, stdout: stdout)
       elsif command == "rate-limit"
-        Commands::RateLimit.call(argv: argv, stdout: stdout, config: config)
+        Commands::RateLimit.call(argv: argv, stdout: stdout)
       else
         warn "unrecognized command #{command}"
       end
     rescue Interrupt => _
-      config.connection.close
+      Config.connection.close
     end
 
     private
 
     attr_reader :argv, :command, :stdout
   end
-
-  Config = Struct.new(:connection, keyword_init: true)
 end

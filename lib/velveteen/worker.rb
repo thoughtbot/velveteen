@@ -36,6 +36,14 @@ module Velveteen
       !!self.class.rate_limit_key
     end
 
+    def exchange_name
+      self.class.exchange_name
+    end
+
+    def rate_limit_key
+      self.class.rate_limit_key
+    end
+
     private
 
     def publish(*args)
