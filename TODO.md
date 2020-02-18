@@ -20,6 +20,7 @@ TODO:
 * error messages that are helpful
   * e.g. missing exchange/queue/etc name
 * put rate limit config into a single file, so worker and producer can share it
+* consider documenting the example files
 
 Concerns:
 
