@@ -40,7 +40,7 @@ module Velveteen
         queue = channel.queue(worker_class.queue_name, durable: true)
         queue.bind(exchange, routing_key: worker_class.routing_key)
 
-        queue.subscribe(manual_ack: true, block: true) do |delivery_info, _properties, body|
+        queue.subscribe(manual_ack: true) do |delivery_info, _properties, body|
           HandleMessage.call(
             body: body,
             exchange: exchange,
@@ -48,6 +48,8 @@ module Velveteen
           )
           channel.ack(delivery_info.delivery_tag)
         end
+
+        loop { sleep 5 }
       end
 
       private
