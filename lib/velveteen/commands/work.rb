@@ -83,6 +83,7 @@ module Velveteen
     def self.call(worker:)
       # TODO: this is too much info for consuming
       token_bucket = TokenBucket.new(
+        # TODO: do not create a channel each time
         channel: Config.connection.create_channel,
         exchange_name: worker.exchange_name,
         per_minute: 600, # TODO: pull this from config

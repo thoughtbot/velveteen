@@ -21,6 +21,8 @@ TODO:
   * e.g. missing exchange/queue/etc name
 * put rate limit config into a single file, so worker and producer can share it
 * consider documenting the example files
+* raise exception in development when publishing an invalid message for a worker
+  that velveteen knows about?
 
 Concerns:
 
