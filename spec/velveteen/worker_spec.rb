@@ -14,16 +14,38 @@ RSpec.describe Velveteen::Worker do
   end
 
   describe "#publish" do
-    it "publishes the message to the exchange" do
+    it "publishes the message to the exchange and preserves the metadata" do
       stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
-      message = Velveteen::Message.new(data: {foo: "bar"})
+      message = Velveteen::Message.new(data: {foo: "bar"}, metadata: {})
       exchange = double(publish: true)
       worker = TestPublishingWorker.new(exchange: exchange, message: message)
 
       worker.perform
 
-      expect(exchange).to have_received(:publish)
-        .with('{"foo":"bar"}', routing_key: "velveteen.test.publish")
+      expect(exchange).to have_received(:publish).with(
+        '{"foo":"bar"}',
+        headers: {},
+        routing_key: "velveteen.test.publish",
+      )
+    end
+
+    it "passes along metadata and appends new metadata" do
+      stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
+      message = Velveteen::Message.new(
+        data: {foo: "bar"},
+        metadata: {baz: "qux"},
+      )
+      exchange = double(publish: true)
+      worker = TestPublishingWorker.new(exchange: exchange, message: message)
+      worker.test_metadata = {name: "fred"}
+
+      worker.perform
+
+      expect(exchange).to have_received(:publish).with(
+        '{"foo":"bar"}',
+        headers: {baz: "qux", name: "fred"},
+        routing_key: "velveteen.test.publish",
+      )
     end
   end
 
@@ -32,8 +54,14 @@ RSpec.describe Velveteen::Worker do
   end
 
   class TestPublishingWorker < described_class
+    attr_accessor :test_metadata
+
     def perform
-      publish(message.data.to_json, routing_key: "velveteen.test.publish")
+      publish(
+        message.data.to_json,
+        headers: test_metadata || {},
+        routing_key: "velveteen.test.publish",
+      )
     end
   end
 end

@@ -1,6 +1,5 @@
 TODO:
 
-* forward rabbit metadata to produced messages
 * validate metadata with its own schema?
   * could maybe see this as the application developer tests that a worker
     produces messages with expected metadata, then can assume velveteen will
@@ -16,6 +15,7 @@ TODO:
 * higher level config?
   * message schema directory
   * exchange name
+  * path to schema files
 * print warning when worker has no schema
 * error messages that are helpful
   * e.g. missing exchange/queue/etc name

@@ -39,8 +39,9 @@ module Velveteen
 
     private
 
-    def publish(*args)
-      exchange.publish(*args)
+    def publish(payload, options = {})
+      options[:headers] = message.metadata.merge(options.fetch(:headers, {}))
+      exchange.publish(payload, options)
     end
 
     def message_schema
