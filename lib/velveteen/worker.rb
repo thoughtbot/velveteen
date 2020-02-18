@@ -16,18 +16,11 @@ module Velveteen
       )
     end
 
-    def initialize(exchange:, message_body:)
+    def initialize(exchange:, message:)
       @exchange = exchange
-      @message_body = message_body
+      @message = message
 
-      json_message = JSON.parse(message_body, symbolize_names: true)
-
-      maybe_validate_message!(json_message)
-
-      @message = Message.new(
-        data: json_message[:data],
-        metadata: json_message[:metadata],
-      )
+      maybe_validate_message!
     rescue JSON::ParserError => e
       raise InvalidMessage.new(e)
     end
@@ -56,9 +49,9 @@ module Velveteen
       end
     end
 
-    def maybe_validate_message!(json_message)
+    def maybe_validate_message!
       if message_schema
-        errors = JSON::Validator.fully_validate(message_schema, json_message)
+        errors = JSON::Validator.fully_validate(message_schema, message.data)
 
         if errors.any?
           raise InvalidMessage, errors.join("\n")

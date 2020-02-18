@@ -9,7 +9,7 @@ RSpec.describe Velveteen::Commands::HandleMessage do
 
   it "invokes the given worker" do
     exchange = double
-    body = double
+    body = "{}"
     worker_instance = instance_double(
       TestWorker,
       perform: true,
@@ -17,10 +17,12 @@ RSpec.describe Velveteen::Commands::HandleMessage do
     )
     allow(TestWorker).to receive(:new).and_return(worker_instance)
     allow(Velveteen::TakeToken).to receive(:call)
+    properties = double(headers: {})
 
     described_class.call(
       body: body,
       exchange: exchange,
+      properties: properties,
       worker_class: TestWorker,
     )
 
@@ -31,7 +33,7 @@ RSpec.describe Velveteen::Commands::HandleMessage do
 
   it "supports rate limiting" do
     exchange = double
-    body = double
+    body = "{}"
     worker_instance = instance_double(
       TestWorker,
       perform: true,
@@ -39,10 +41,12 @@ RSpec.describe Velveteen::Commands::HandleMessage do
     )
     allow(TestWorker).to receive(:new).and_return(worker_instance)
     allow(Velveteen::TakeToken).to receive(:call)
+    properties = double(headers: {})
 
     described_class.call(
       body: body,
       exchange: exchange,
+      properties: properties,
       worker_class: TestWorker,
     )
 

@@ -7,6 +7,10 @@ module Velveteen
 
       def initialize(argv:, stdout:)
         # TODO: Think about this interface and how to make it more friendly
+        if argv.length < 2
+          warn "expected: velveteen work path/to/worker.rb WorkerClassName"
+          exit 1
+        end
         @worker_file = argv.shift
         @worker_class_name = argv.shift
         @stdout = stdout
@@ -40,10 +44,11 @@ module Velveteen
         queue = channel.queue(worker_class.queue_name, durable: true)
         queue.bind(exchange, routing_key: worker_class.routing_key)
 
-        queue.subscribe(manual_ack: true) do |delivery_info, _properties, body|
+        queue.subscribe(manual_ack: true) do |delivery_info, properties, body|
           HandleMessage.call(
             body: body,
             exchange: exchange,
+            properties: properties,
             worker_class: worker_class,
           )
           channel.ack(delivery_info.delivery_tag)
@@ -58,11 +63,12 @@ module Velveteen
     end
 
     class HandleMessage
-      def self.call(worker_class:, exchange:, body:)
-        worker = worker_class.new(
-          exchange: exchange,
-          message_body: body,
-        )
+      def self.call(worker_class:, exchange:, properties:, body:)
+        json_message = JSON.parse(body, symbolize_names: true)
+
+        message = Message.new(data: json_message, metadata: properties.headers)
+
+        worker = worker_class.new(exchange: exchange, message: message)
 
         if worker.rate_limited?
           TakeToken.call(worker: worker)

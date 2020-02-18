@@ -1,7 +1,10 @@
 TODO:
 
 * forward rabbit metadata to produced messages
-* rate limiting
+* validate metadata with its own schema?
+  * could maybe see this as the application developer tests that a worker
+    produces messages with expected metadata, then can assume velveteen will
+    pass those on, and not worry about a schema
 * error handling, exponential backoff
 * set up Travis
 * environments - e.g. debugging tools, dev console output/logging, test helpers
