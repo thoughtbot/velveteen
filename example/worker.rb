@@ -8,6 +8,10 @@ class PlaygroundWorker < Velveteen::Worker
   # self.rate_limit_key = "velveteen-general-development"
 
   def perform
-    puts "message '#{message.data[:job]}' worked - metadata #{message.metadata.inspect}"
+    if message.data[:job].even? && rand > 0.5
+      raise "Randomly failed"
+    else
+      puts "message '#{message.data[:job]}' worked - metadata #{message.metadata.inspect}"
+    end
   end
 end

@@ -45,13 +45,17 @@ module Velveteen
         queue.bind(exchange, routing_key: worker_class.routing_key)
 
         queue.subscribe(manual_ack: true) do |delivery_info, properties, body|
-          HandleMessage.call(
+          message = ParseMessage.call(
             body: body,
-            exchange: exchange,
+            delivery_info: delivery_info,
             properties: properties,
+          )
+          HandleMessage.call(
+            channel: channel,
+            exchange: exchange,
+            message: message,
             worker_class: worker_class,
           )
-          channel.ack(delivery_info.delivery_tag)
         end
 
         loop { sleep 5 }
@@ -62,12 +66,24 @@ module Velveteen
       attr_reader :channel, :worker_class
     end
 
+    class ParseMessage
+      def self.call(body:, delivery_info:, properties:)
+        data = JSON.parse(body, symbolize_names: true)
+
+        Message.new(
+          body: body,
+          data: data,
+          delivery_info: delivery_info,
+          metadata: properties.headers,
+          properties: properties,
+        )
+      rescue JSON::ParserError => e
+        raise InvalidMessage.new(e)
+      end
+    end
+
     class HandleMessage
-      def self.call(worker_class:, exchange:, properties:, body:)
-        json_message = JSON.parse(body, symbolize_names: true)
-
-        message = Message.new(data: json_message, metadata: properties.headers)
-
+      def self.call(channel:, exchange:, message:, worker_class:)
         worker = worker_class.new(exchange: exchange, message: message)
 
         if worker.rate_limited?
@@ -75,8 +91,14 @@ module Velveteen
         end
 
         worker.perform
-      rescue JSON::ParserError => e
-        raise InvalidMessage.new(e)
+
+        channel.ack(message.delivery_info.delivery_tag)
+      rescue => error
+        Config.error_handler.call(
+          channel: channel,
+          error: error,
+          message: message,
+        )
       end
     end
   end

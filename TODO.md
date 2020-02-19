@@ -26,6 +26,13 @@ TODO:
 * raise exception in development when publishing an invalid message for a worker
   that velveteen knows about?
 * move this todo list into proper place - trello, gh issues/projects, etc
+* validate the message before instantiating the worker? benefit could be that
+  it's an explicit step than can be more easily moved around, and it could
+  happen at the class level, without needing to hold onto an instance(?)
+* don't symbolize keys when parsing JSON? the bunny `headers` are strings and
+  it's probably a good idea to be consistent with that
+* use logger for all output
+* don't introduce metadata as a term? stick with rabbit's term of headers?
 
 Concerns:
 
