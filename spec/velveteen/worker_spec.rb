@@ -5,28 +5,28 @@ RSpec.describe Velveteen::Worker do
     it "raises an error when the incoming message does not match the schema" do
       stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
       message = Velveteen::Message.new(data: {})
-      exchange = double
 
       expect {
-        TestSchemaWorker.new(exchange: exchange, message: message)
+        TestSchemaWorker.new(message: message)
       }.to raise_error(Velveteen::InvalidMessage, /foo/)
     end
   end
 
   describe "#publish" do
-    it "publishes the message to the exchange and preserves the metadata" do
+    it "publishes the message" do
       stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
       message = Velveteen::Message.new(data: {foo: "bar"}, metadata: {})
-      exchange = double(publish: true)
-      worker = TestPublishingWorker.new(exchange: exchange, message: message)
+      worker = TestPublishingWorker.new(message: message)
+      queue = Velveteen::Config.channel.queue("")
+      queue.bind(
+        Velveteen::Config.exchange,
+        routing_key: "velveteen.test.publish",
+      )
 
       worker.perform
 
-      expect(exchange).to have_received(:publish).with(
-        '{"foo":"bar"}',
-        headers: {},
-        routing_key: "velveteen.test.publish",
-      )
+      _, _, body = queue.pop
+      expect(body).to eq('{"foo":"bar"}')
     end
 
     it "passes along metadata and appends new metadata" do
@@ -35,17 +35,18 @@ RSpec.describe Velveteen::Worker do
         data: {foo: "bar"},
         metadata: {baz: "qux"},
       )
-      exchange = double(publish: true)
-      worker = TestPublishingWorker.new(exchange: exchange, message: message)
+      worker = TestPublishingWorker.new(message: message)
       worker.test_metadata = {name: "fred"}
+      queue = Velveteen::Config.channel.queue("")
+      queue.bind(
+        Velveteen::Config.exchange,
+        routing_key: "velveteen.test.publish",
+      )
 
       worker.perform
 
-      expect(exchange).to have_received(:publish).with(
-        '{"foo":"bar"}',
-        headers: {baz: "qux", name: "fred"},
-        routing_key: "velveteen.test.publish",
-      )
+      _, properties, _ = queue.pop
+      expect(properties[:headers]).to eq(baz: "qux", name: "fred")
     end
   end
 

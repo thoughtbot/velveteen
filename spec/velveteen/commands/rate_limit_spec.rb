@@ -2,19 +2,22 @@ require "velveteen/commands/rate_limit"
 require "velveteen/worker"
 
 RSpec.describe Velveteen::Commands::RateLimit do
-  it do
+  it "produces tokens at an interval until interrupted" do
     argv = %w[
       test-velveteen
       test-rate-limit-key
       300
     ]
-    Velveteen::Config.connection = BunnyMock.new.start
     rate_limit = described_class.new(
       argv: argv,
       stdout: StringIO.new,
     )
-    token_bucket = instance_double(TokenBucket, produce: true, duration: 0.2)
-    allow(TokenBucket).to receive(:new).and_return(token_bucket)
+    token_bucket = instance_double(
+      Velveteen::TokenBucket,
+      produce: true,
+      duration: 0.2,
+    )
+    allow(Velveteen::TokenBucket).to receive(:new).and_return(token_bucket)
     call_count = 0
     allow(rate_limit).to receive(:sleep) do
       call_count += 1
@@ -27,9 +30,7 @@ RSpec.describe Velveteen::Commands::RateLimit do
       rate_limit.call
     }.to raise_error(Interrupt)
 
-    expect(TokenBucket).to have_received(:new).with(
-      channel: anything,
-      exchange_name: "test-velveteen",
+    expect(Velveteen::TokenBucket).to have_received(:new).with(
       key: "test-rate-limit-key",
       per_minute: 300,
     )

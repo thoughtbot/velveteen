@@ -1,3 +1,4 @@
+require "velveteen/config"
 require "velveteen/message"
 require "velveteen/worker"
 require "velveteen/version"

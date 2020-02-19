@@ -1,7 +1,12 @@
 require "bundler/setup"
 require "bunny-mock"
+require "pry"
 
 require "velveteen"
+
+Velveteen::Config.connection = BunnyMock.new
+
+BunnyMock.use_bunny_queue_pop_api = true
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

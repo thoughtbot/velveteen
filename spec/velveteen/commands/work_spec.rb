@@ -8,8 +8,6 @@ RSpec.describe Velveteen::Commands::HandleMessage do
   end
 
   it "invokes the given worker" do
-    channel = double(ack: true)
-    exchange = double
     worker_instance = instance_double(
       TestWorker,
       perform: true,
@@ -23,8 +21,6 @@ RSpec.describe Velveteen::Commands::HandleMessage do
     )
 
     described_class.call(
-      channel: channel,
-      exchange: exchange,
       message: message,
       worker_class: TestWorker,
     )
@@ -35,8 +31,6 @@ RSpec.describe Velveteen::Commands::HandleMessage do
   end
 
   it "supports rate limiting" do
-    channel = double(ack: true)
-    exchange = double
     worker_instance = instance_double(
       TestWorker,
       perform: true,
@@ -51,12 +45,7 @@ RSpec.describe Velveteen::Commands::HandleMessage do
     allow(TestWorker).to receive(:new).and_return(worker_instance)
     allow(Velveteen::TakeToken).to receive(:call)
 
-    described_class.call(
-      channel: channel,
-      exchange: exchange,
-      message: message,
-      worker_class: TestWorker,
-    )
+    described_class.call(message: message, worker_class: TestWorker)
 
     expect(Velveteen::TakeToken)
       .to have_received(:call).with(worker: worker_instance)

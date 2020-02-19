@@ -4,11 +4,10 @@ module Velveteen
   class Worker
     SCHEMA_DIRECTORY = "app/message_schemas"
 
-    attr_reader :exchange, :message
+    attr_reader :message
 
     class << self
       attr_accessor(
-        :exchange_name,
         :message_schema,
         :queue_name,
         :rate_limit_key,
@@ -16,8 +15,7 @@ module Velveteen
       )
     end
 
-    def initialize(exchange:, message:)
-      @exchange = exchange
+    def initialize(message:)
       @message = message
 
       maybe_validate_message!
@@ -25,10 +23,6 @@ module Velveteen
 
     def rate_limited?
       !!self.class.rate_limit_key
-    end
-
-    def exchange_name
-      self.class.exchange_name
     end
 
     def rate_limit_key
@@ -39,7 +33,7 @@ module Velveteen
 
     def publish(payload, options = {})
       options[:headers] = message.metadata.merge(options.fetch(:headers, {}))
-      exchange.publish(payload, options)
+      Config.exchange.publish(payload, options)
     end
 
     def message_schema

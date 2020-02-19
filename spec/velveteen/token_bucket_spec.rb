@@ -5,16 +5,10 @@ require "velveteen/token_bucket"
 BunnyMock.use_bunny_queue_pop_api = true
 BUNNY_CONNECTION = BunnyMock.new.start
 
-RSpec.describe TokenBucket do
+RSpec.describe Velveteen::TokenBucket do
   describe "#duration" do
     it "returns the duration of a token" do
-      channel = BUNNY_CONNECTION.channel
-      token_bucket = TokenBucket.new(
-        channel: channel,
-        exchange_name: "foo",
-        key: "foo",
-        per_minute: 120,
-      )
+      token_bucket = described_class.new(key: "foo", per_minute: 120)
 
       expect(token_bucket.duration).to eq 0.5
     end
@@ -26,17 +20,11 @@ RSpec.describe TokenBucket do
       Timecop.freeze(new_time) do
         key = "token-bucket"
         per_minute = 10
-        connection = BUNNY_CONNECTION
-        channel = connection.channel
-        queue = channel.queue(key)
-        token_bucket = TokenBucket.new(
-          channel: channel,
-          exchange_name: "foo",
-          key: key,
-          per_minute: per_minute,
-        )
+        queue = Velveteen::Config.channel.queue(key)
+        token_bucket = described_class.new(key: key, per_minute: per_minute)
 
         token_bucket.produce
+
         expect(queue.message_count).to eq(1)
         payload = queue.pop
         expect(queue.message_count).to eq(0)
@@ -51,13 +39,9 @@ RSpec.describe TokenBucket do
       per_minute = 10
       key = "test-key"
       queue = double(BunnyMock::Queue, bind: true)
-      channel = double(BUNNY_CONNECTION.start.channel, basic_ack: true, queue: queue, topic: true)
-      token_bucket = TokenBucket.new(
-        channel: channel,
-        exchange_name: "foo",
-        key: key,
-        per_minute: per_minute,
-      )
+      channel = double(BunnyMock::Channel, basic_ack: true, queue: queue, topic: true)
+      allow(Velveteen::Config).to receive(:channel).and_return(channel)
+      token_bucket = described_class.new(key: key, per_minute: per_minute)
       allow(queue).to receive(:pop).and_return([nil, nil, nil], [delivery_info, {}, "Token"])
       allow(channel).to receive(:basic_ack)
       allow(token_bucket).to receive(:sleep)

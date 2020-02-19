@@ -1,7 +1,8 @@
 require "velveteen"
 
+Velveteen::Config.exchange_name = "velveteen-development"
+
 class PlaygroundWorker < Velveteen::Worker
-  self.exchange_name = "velveteen-development"
   self.queue_name = "velveteen_general_development"
   self.routing_key = "velveteen.general.development"
   # self.message_schema = "velveteen_general.json"

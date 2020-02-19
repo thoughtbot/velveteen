@@ -17,15 +17,12 @@ module Velveteen
       end
 
       def call
-        channel = Config.connection.create_channel
-        channel.prefetch(1)
-
         stdout.puts " [*] Waiting for messages. To exit press CTRL+C"
 
         require File.expand_path(worker_file)
         worker_class = Object.const_get(worker_class_name)
 
-        RunWorker.new(channel: channel, worker_class: worker_class).call
+        RunWorker.new(worker_class: worker_class).call
       end
 
       private
@@ -34,15 +31,13 @@ module Velveteen
     end
 
     class RunWorker
-      def initialize(channel:, worker_class:)
-        @channel = channel
+      def initialize(worker_class:)
         @worker_class = worker_class
       end
 
       def call
-        exchange = channel.topic(worker_class.exchange_name, durable: true)
-        queue = channel.queue(worker_class.queue_name, durable: true)
-        queue.bind(exchange, routing_key: worker_class.routing_key)
+        queue = Config.channel.queue(worker_class.queue_name, durable: true)
+        queue.bind(Config.exchange, routing_key: worker_class.routing_key)
 
         queue.subscribe(manual_ack: true) do |delivery_info, properties, body|
           message = ParseMessage.call(
@@ -51,8 +46,6 @@ module Velveteen
             properties: properties,
           )
           HandleMessage.call(
-            channel: channel,
-            exchange: exchange,
             message: message,
             worker_class: worker_class,
           )
@@ -63,7 +56,7 @@ module Velveteen
 
       private
 
-      attr_reader :channel, :worker_class
+      attr_reader :worker_class
     end
 
     class ParseMessage
@@ -83,8 +76,8 @@ module Velveteen
     end
 
     class HandleMessage
-      def self.call(channel:, exchange:, message:, worker_class:)
-        worker = worker_class.new(exchange: exchange, message: message)
+      def self.call(message:, worker_class:)
+        worker = worker_class.new(message: message)
 
         if worker.rate_limited?
           TakeToken.call(worker: worker)
@@ -92,10 +85,9 @@ module Velveteen
 
         worker.perform
 
-        channel.ack(message.delivery_info.delivery_tag)
+        Config.channel.ack(message.delivery_info.delivery_tag)
       rescue => error
         Config.error_handler.call(
-          channel: channel,
           error: error,
           message: message,
         )
@@ -105,11 +97,7 @@ module Velveteen
 
   class TakeToken
     def self.call(worker:)
-      # TODO: this is too much info for consuming
       token_bucket = TokenBucket.new(
-        # TODO: do not create a channel each time
-        channel: Config.connection.create_channel,
-        exchange_name: worker.exchange_name,
         per_minute: 600, # TODO: pull this from config
         key: worker.rate_limit_key,
       )
