@@ -75,6 +75,8 @@ module Velveteen
         end
 
         worker.perform
+      rescue JSON::ParserError => e
+        raise InvalidMessage.new(e)
       end
     end
   end

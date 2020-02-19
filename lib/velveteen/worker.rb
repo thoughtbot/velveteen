@@ -21,8 +21,6 @@ module Velveteen
       @message = message
 
       maybe_validate_message!
-    rescue JSON::ParserError => e
-      raise InvalidMessage.new(e)
     end
 
     def rate_limited?

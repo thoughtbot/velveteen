@@ -4,6 +4,8 @@ TODO:
   * could maybe see this as the application developer tests that a worker
     produces messages with expected metadata, then can assume velveteen will
     pass those on, and not worry about a schema
+  * use private method(s) on the worker to define the message schema, instead of
+    json file(s)?
 * error handling, exponential backoff
 * set up Travis
 * environments - e.g. debugging tools, dev console output/logging, test helpers
@@ -23,6 +25,7 @@ TODO:
 * consider documenting the example files
 * raise exception in development when publishing an invalid message for a worker
   that velveteen knows about?
+* move this todo list into proper place - trello, gh issues/projects, etc
 
 Concerns:
 

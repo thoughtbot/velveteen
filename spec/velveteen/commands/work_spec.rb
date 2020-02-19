@@ -54,4 +54,18 @@ RSpec.describe Velveteen::Commands::HandleMessage do
       .to have_received(:call).with(worker: worker_instance)
     expect(worker_instance).to have_received(:perform)
   end
+
+  it "raises an InvalidMessage error with malformed JSON" do
+    expect {
+      described_class.call(
+        body: "invalid json",
+        exchange: double,
+        properties: double,
+        worker_class: TestWorker,
+      )
+    }.to raise_error do |error|
+      expect(error).to be_a(Velveteen::InvalidMessage)
+      expect(error.cause).to be_a(JSON::ParserError)
+    end
+  end
 end
