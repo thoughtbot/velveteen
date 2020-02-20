@@ -6,9 +6,15 @@ RSpec.describe Velveteen::ErrorHandlers::Reject do
     message = double(delivery_info: delivery_info)
     worker = double
     error = StandardError.new
-    allow(Velveteen::Config.channel).to receive(:reject)
+    channel = double(reject: true)
+    allow(Velveteen::Config).to receive(:channel).and_return(channel)
 
-    described_class.call(error: error, message: message, worker: worker)
+    described_class.call(
+      error: error,
+      message: message,
+      worker: worker,
+      out: StringIO.new,
+    )
 
     expect(Velveteen::Config.channel).to have_received(:reject)
       .with("foo", false)

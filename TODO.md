@@ -14,10 +14,6 @@ TODO:
 * connection failures
 * what Ruby versions to support?
 * parse date/time into instances of those objects?
-* higher level config?
-  * message schema directory
-  * exchange name
-  * path to schema files
 * print warning when worker has no schema
 * error messages that are helpful
   * e.g. missing exchange/queue/etc name
@@ -33,6 +29,10 @@ TODO:
   it's probably a good idea to be consistent with that
 * use logger for all output
 * don't introduce metadata as a term? stick with rabbit's term of headers?
+* support timeouts?
+* improve config architecture
+  * avoid all memoization by creating a config instance and storing it
+    somewhere?
 
 Concerns:
 

@@ -13,7 +13,7 @@ module Velveteen
     end
 
     def self.exchange
-      @exchange ||= Config.channel.topic(exchange_name, durable: true)
+      Config.channel.topic(exchange_name, durable: true)
     end
 
     self.error_handler = ErrorHandlers::Reject
