@@ -90,6 +90,7 @@ module Velveteen
         Config.error_handler.call(
           error: error,
           message: message,
+          worker: worker,
         )
       end
     end

@@ -1,3 +1,5 @@
+require "velveteen/error_handlers"
+
 module Velveteen
   module Config
     class << self
@@ -14,9 +16,6 @@ module Velveteen
       @exchange ||= Config.channel.topic(exchange_name, durable: true)
     end
 
-    self.error_handler = ->(error:, message:) do
-      channel.reject(message.delivery_info.delivery_tag, false)
-      puts [error.message, error.backtrace]
-    end
+    self.error_handler = ErrorHandlers::Reject
   end
 end
