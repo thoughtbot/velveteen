@@ -29,6 +29,14 @@ module Velveteen
       self.class.rate_limit_key
     end
 
+    def queue_name
+      self.class.queue_name
+    end
+
+    def routing_key
+      self.class.routing_key
+    end
+
     private
 
     def publish(payload, options = {})

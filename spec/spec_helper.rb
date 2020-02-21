@@ -5,6 +5,8 @@ require "pry"
 require "velveteen"
 
 Velveteen::Config.connection = BunnyMock.new
+Velveteen::Config.exchange_name = "velveteen-test-exchange"
+Velveteen::Config.queue_class = BunnyMock::Queue
 
 BunnyMock.use_bunny_queue_pop_api = true
 

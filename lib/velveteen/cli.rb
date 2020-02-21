@@ -15,6 +15,7 @@ module Velveteen
     def call
       if Config.connection.nil?
         Config.connection = Bunny.new.start
+        Config.queue_class = Bunny::Queue
       end
 
       stdout.sync = true

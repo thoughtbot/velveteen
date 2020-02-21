@@ -1,5 +1,6 @@
 require "velveteen"
 
+Velveteen::Config.error_handler = Velveteen::ErrorHandlers::ExponentialBackoff
 Velveteen::Config.exchange_name = "velveteen-development"
 
 class PlaygroundWorker < Velveteen::Worker
@@ -12,7 +13,7 @@ class PlaygroundWorker < Velveteen::Worker
     if message.data[:job].even? && rand > 0.5
       raise "Randomly failed"
     else
-      puts "message '#{message.data[:job]}' worked - metadata #{message.metadata.inspect}"
+      puts "message '#{message.data}' worked - metadata #{message.metadata.inspect}"
     end
   end
 end
