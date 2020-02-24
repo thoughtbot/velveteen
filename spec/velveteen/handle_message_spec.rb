@@ -1,7 +1,6 @@
-require "velveteen/commands/work"
-require "velveteen/worker"
+require "velveteen/handle_message"
 
-RSpec.describe Velveteen::Commands::HandleMessage do
+RSpec.describe Velveteen::HandleMessage do
   class TestWorker < Velveteen::Worker
     def perform
     end
@@ -50,39 +49,5 @@ RSpec.describe Velveteen::Commands::HandleMessage do
     expect(Velveteen::TakeToken)
       .to have_received(:call).with(worker: worker_instance)
     expect(worker_instance).to have_received(:perform)
-  end
-end
-
-RSpec.describe Velveteen::Commands::ParseMessage do
-  it "parses the message as JSON and extracts metadata" do
-    body = '{"foo": "bar"}'
-    delivery_info = double
-    metadata = double
-    properties = double(headers: metadata)
-
-    message = described_class.call(
-      body: body,
-      delivery_info: delivery_info,
-      properties: properties,
-    )
-
-    expect(message.data).to eq(foo: "bar")
-    expect(message.metadata).to eq(metadata)
-    expect(message.body).to eq(body)
-    expect(message.delivery_info).to eq(delivery_info)
-    expect(message.properties).to eq(properties)
-  end
-
-  it "raises an InvalidMessage error with malformed JSON" do
-    expect {
-      described_class.call(
-        body: "invalid json",
-        delivery_info: double,
-        properties: double,
-      )
-    }.to raise_error do |error|
-      expect(error).to be_a(Velveteen::InvalidMessage)
-      expect(error.cause).to be_a(JSON::ParserError)
-    end
   end
 end

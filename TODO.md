@@ -6,6 +6,7 @@ TODO:
 * use logger for all output
 * environments - e.g. debugging tools, dev console output/logging, test helpers
 * integration tests that actually hit Rabbit
+* improve CLI, e.g. parse options and have useful help text
 * set up Travis
 * improve config architecture
   * avoid all memoization by creating a config instance and storing it
