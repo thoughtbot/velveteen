@@ -1,5 +1,6 @@
 require "velveteen"
 
+Velveteen.logger = Logger.new($stdout, :debug)
 Velveteen::Config.error_handler = Velveteen::ErrorHandlers::ExponentialBackoff
 Velveteen::Config.exchange_name = "velveteen_development"
 
@@ -12,7 +13,9 @@ class RandomlyFail < Velveteen::Worker
     if message.data[:job].even? && rand > 0.5
       raise "Randomly failed"
     else
-      puts "message '#{message.data}' worked - headers #{message.headers.inspect}"
+      logger.info(
+        "message '#{message.data}' worked - headers #{message.headers.inspect}"
+      )
     end
   end
 end

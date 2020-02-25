@@ -38,6 +38,10 @@ module Velveteen
 
     private
 
+    def logger
+      Velveteen.logger
+    end
+
     def publish(payload, options = {})
       options[:headers] = message.headers.merge(options.fetch(:headers, {}))
       Config.exchange.publish(payload, options)

@@ -1,4 +1,5 @@
 require "velveteen/config"
+require "velveteen/logger"
 require "velveteen/message"
 require "velveteen/worker"
 require "velveteen/version"

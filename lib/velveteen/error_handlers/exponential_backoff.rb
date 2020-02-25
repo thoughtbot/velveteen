@@ -14,7 +14,9 @@ module Velveteen
       end
 
       def call
-        # puts "message '#{message.data}' failed - retrying"
+        Velveteen.logger.error(worker.queue_name) do
+          "message '#{message.data}' failed - #{error.message}"
+        end
 
         if retry?
           set_up_retry_queue

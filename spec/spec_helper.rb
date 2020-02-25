@@ -4,6 +4,7 @@ require "pry"
 
 require "velveteen"
 
+Velveteen.logger = Logger.new(IO::NULL)
 Velveteen::Config.connection = BunnyMock.new
 Velveteen::Config.exchange_name = "velveteen-test-exchange"
 Velveteen::Config.queue_class = BunnyMock::Queue
