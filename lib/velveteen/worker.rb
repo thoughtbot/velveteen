@@ -7,18 +7,17 @@ module Velveteen
     attr_reader :message
 
     class << self
-      attr_accessor(
-        :message_schema,
-        :queue_name,
-        :rate_limit_key,
-        :routing_key,
-      )
+      attr_accessor :message_schema, :rate_limit_key, :routing_key
     end
 
     def initialize(message:)
       @message = message
 
       maybe_validate_message!
+    end
+
+    def self.queue_name
+      name
     end
 
     def rate_limited?
