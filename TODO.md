@@ -50,6 +50,8 @@ TODO:
 * don't symbolize keys when parsing JSON? the bunny `headers` are strings and
   it's probably a good idea to be consistent with that
 * support timeouts?
+* should taking a token use the same duration as the producer? currently
+  hard-coded to check every 100ms
 
 Concerns:
 
