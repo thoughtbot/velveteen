@@ -45,7 +45,7 @@ module Velveteen
       end
 
       def retry_count
-        message.metadata.fetch("x-death", []).size + 1
+        message.headers.fetch("x-death", []).size + 1
       end
 
       def delay
@@ -76,7 +76,7 @@ module Velveteen
         Config.exchange.publish(
           message.body,
           routing_key: retry_routing_key,
-          headers: message.metadata,
+          headers: message.headers,
         )
       end
 
@@ -84,7 +84,7 @@ module Velveteen
         Config.dlx_exchange.publish(
           message.body,
           routing_key: worker.routing_key,
-          headers: message.metadata,
+          headers: message.headers,
         )
       end
     end

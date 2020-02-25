@@ -2,7 +2,6 @@ TODO:
 
 * move this todo list into proper place - trello, gh issues/projects, etc
 * differentiate rate limit queues (e.g. add `_tokens` or something to the name)
-* don't introduce metadata as a term? stick with rabbit's term of headers?
 * use logger for all output
 * environments - e.g. debugging tools, dev console output/logging, test helpers
 * integration tests that actually hit Rabbit
@@ -34,6 +33,9 @@ TODO:
 * connection failures
 * what Ruby versions to support?
 * parse date/time into instances of those objects?
+* rethink Message interface? `body` and `data` represent the same thing in
+  different ways, `headers` is a subset of `properties` but must be passed in
+  separately
 * print warning when worker has no schema
 * error messages that are helpful
   * e.g. missing exchange/queue/etc name

@@ -13,7 +13,7 @@ class PlaygroundWorker < Velveteen::Worker
     if message.data[:job].even? && rand > 0.5
       raise "Randomly failed"
     else
-      puts "message '#{message.data}' worked - metadata #{message.metadata.inspect}"
+      puts "message '#{message.data}' worked - headers #{message.headers.inspect}"
     end
   end
 end

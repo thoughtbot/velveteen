@@ -3,7 +3,7 @@ module Velveteen
     :body,
     :data,
     :delivery_info,
-    :metadata,
+    :headers,
     :properties,
     keyword_init: true,
   )

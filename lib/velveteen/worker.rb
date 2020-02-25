@@ -40,7 +40,7 @@ module Velveteen
     private
 
     def publish(payload, options = {})
-      options[:headers] = message.metadata.merge(options.fetch(:headers, {}))
+      options[:headers] = message.headers.merge(options.fetch(:headers, {}))
       Config.exchange.publish(payload, options)
     end
 

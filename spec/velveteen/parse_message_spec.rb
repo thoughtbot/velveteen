@@ -2,11 +2,11 @@ require "velveteen/parse_message"
 require "velveteen/worker"
 
 RSpec.describe Velveteen::ParseMessage do
-  it "parses the message as JSON and extracts metadata" do
+  it "parses the message as JSON and extracts headers" do
     body = '{"foo": "bar"}'
     delivery_info = double
-    metadata = double
-    properties = double(headers: metadata)
+    headers = double
+    properties = double(headers: headers)
 
     message = described_class.call(
       body: body,
@@ -15,7 +15,7 @@ RSpec.describe Velveteen::ParseMessage do
     )
 
     expect(message.data).to eq(foo: "bar")
-    expect(message.metadata).to eq(metadata)
+    expect(message.headers).to eq(headers)
     expect(message.body).to eq(body)
     expect(message.delivery_info).to eq(delivery_info)
     expect(message.properties).to eq(properties)

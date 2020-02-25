@@ -15,7 +15,7 @@ RSpec.describe Velveteen::Worker do
   describe "#publish" do
     it "publishes the message" do
       stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
-      message = Velveteen::Message.new(data: {foo: "bar"}, metadata: {})
+      message = Velveteen::Message.new(data: {foo: "bar"}, headers: {})
       worker = TestPublishingWorker.new(message: message)
       queue = Velveteen::Config.channel.queue("")
       queue.bind(
@@ -29,14 +29,14 @@ RSpec.describe Velveteen::Worker do
       expect(body).to eq('{"foo":"bar"}')
     end
 
-    it "passes along metadata and appends new metadata" do
+    it "passes along headers and appends new headers" do
       stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
       message = Velveteen::Message.new(
         data: {foo: "bar"},
-        metadata: {baz: "qux"},
+        headers: {baz: "qux"},
       )
       worker = TestPublishingWorker.new(message: message)
-      worker.test_metadata = {name: "fred"}
+      worker.test_headers = {name: "fred"}
       queue = Velveteen::Config.channel.queue("")
       queue.bind(
         Velveteen::Config.exchange,
@@ -55,12 +55,12 @@ RSpec.describe Velveteen::Worker do
   end
 
   class TestPublishingWorker < described_class
-    attr_accessor :test_metadata
+    attr_accessor :test_headers
 
     def perform
       publish(
         message.data.to_json,
-        headers: test_metadata || {},
+        headers: test_headers || {},
         routing_key: "velveteen.test.publish",
       )
     end
