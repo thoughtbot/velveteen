@@ -2,6 +2,7 @@ TODO:
 
 * move this todo list into proper place - trello, gh issues/projects, etc
 * differentiate rate limit queues (e.g. add `_tokens` or something to the name)
+* establish a naming convention for exchanges, queues, and routing keys
 * use logger for all output
 * environments - e.g. debugging tools, dev console output/logging, test helpers
 * integration tests that actually hit Rabbit
@@ -25,6 +26,7 @@ TODO:
     first error. is that okay?
   * find a better solution for working around the Bunny cache holding onto
     expired queues
+  * don't retry for certain exception types?
 * better interrupt handling?
   * sometimes ctr+c (sending SIGINT) causes Bunny to dump a backtrace. is there
     something we should be doing to gracefully halt Bunny?
