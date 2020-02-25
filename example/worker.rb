@@ -3,8 +3,8 @@ require "velveteen"
 Velveteen::Config.error_handler = Velveteen::ErrorHandlers::ExponentialBackoff
 Velveteen::Config.exchange_name = "velveteen-development"
 
-class PlaygroundWorker < Velveteen::Worker
-  self.routing_key = "velveteen.general.development"
+class RandomlyFail < Velveteen::Worker
+  self.routing_key = "velveteen.fail.randomly"
   # self.message_schema = "velveteen_general.json"
   self.rate_limit_key = "velveteen-general-development"
 

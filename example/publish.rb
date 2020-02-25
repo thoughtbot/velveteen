@@ -11,7 +11,7 @@ message_count.times do |i|
   exchange.publish(
     {job: i}.to_json,
     headers: {foo: "bar"},
-    routing_key: "velveteen.general.development",
+    routing_key: "velveteen.fail.randomly",
     persistent: true
   )
 end
