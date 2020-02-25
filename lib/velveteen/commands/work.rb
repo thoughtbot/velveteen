@@ -3,8 +3,8 @@ require "velveteen/run_worker"
 module Velveteen
   module Commands
     class Work
-      def self.call(*args)
-        new(*args).call
+      def self.call(**kwargs)
+        new(**kwargs).call
       end
 
       def initialize(argv:, stdout:)

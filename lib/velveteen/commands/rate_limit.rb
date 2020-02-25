@@ -4,8 +4,8 @@ require "velveteen/token_bucket"
 module Velveteen
   module Commands
     class RateLimit
-      def self.call(*args)
-        new(*args).call
+      def self.call(**kwargs)
+        new(**kwargs).call
       end
 
       def initialize(argv:, stdout:)
