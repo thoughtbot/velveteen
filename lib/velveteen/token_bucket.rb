@@ -4,23 +4,22 @@ require "time"
 
 module Velveteen
   class TokenBucket
-    def initialize(per_minute:, key:)
-      @key = key
+    def initialize(per_minute:, queue_name:)
+      @queue_name = queue_name
       @per_minute = per_minute
       @queue = Config.channel.queue(
-        key,
+        queue_name,
         durable: true,
         arguments: {
           "x-max-length" => 1,
         }
       )
-      @queue.bind(Config.exchange, routing_key: key)
     end
 
     def produce
-      Config.exchange.publish(
+      queue.publish(
         Time.now.utc.iso8601,
-        routing_key: key,
+        routing_key: queue_name,
       )
     end
 
@@ -42,11 +41,11 @@ module Velveteen
     end
 
     def to_s
-      "<TokenBucket:#{key}>"
+      "<TokenBucket:#{queue_name}>"
     end
 
     private
 
-    attr_reader :expiration, :key
+    attr_reader :expiration, :queue_name, :queue
   end
 end

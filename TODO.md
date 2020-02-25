@@ -1,7 +1,6 @@
 TODO:
 
 * move this todo list into proper place - trello, gh issues/projects, etc
-* differentiate rate limit queues (e.g. add `_tokens` or something to the name)
 * establish a naming convention for exchanges, queues, and routing keys
 * use logger for all output
 * environments - e.g. debugging tools, dev console output/logging, test helpers
@@ -41,7 +40,7 @@ TODO:
 * print warning when worker has no schema
 * error messages that are helpful
   * e.g. missing exchange/queue/etc name
-* put rate limit config into a single file, so worker and producer can share it
+* put rate limit config into a single file, so worker and producer can share it?
 * consider documenting the example files
 * raise exception in development when publishing an invalid message for a worker
   that velveteen knows about?

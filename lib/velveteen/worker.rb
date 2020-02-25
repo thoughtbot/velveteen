@@ -7,7 +7,7 @@ module Velveteen
     attr_reader :message
 
     class << self
-      attr_accessor :message_schema, :rate_limit_key, :routing_key
+      attr_accessor :message_schema, :rate_limit_queue, :routing_key
     end
 
     def initialize(message:)
@@ -21,11 +21,11 @@ module Velveteen
     end
 
     def rate_limited?
-      !!self.class.rate_limit_key
+      !!self.class.rate_limit_queue
     end
 
-    def rate_limit_key
-      self.class.rate_limit_key
+    def rate_limit_queue
+      self.class.rate_limit_queue
     end
 
     def queue_name

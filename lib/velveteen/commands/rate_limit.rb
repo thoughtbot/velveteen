@@ -9,16 +9,18 @@ module Velveteen
       end
 
       def initialize(argv:, stdout:)
-        Config.exchange_name = argv.shift
-        @routing_key = argv.shift
+        @queue_name = argv.shift
         @per_minute = argv.shift.to_f
         @stdout = stdout
       end
 
       def call
-        stdout.puts "rate limiting #{routing_key} at #{per_minute} per minute"
+        stdout.puts "rate limiting #{queue_name} at #{per_minute} per minute"
         stdout.puts "CTRL+C to stop"
-        token_bucket = TokenBucket.new(per_minute: per_minute, key: routing_key)
+        token_bucket = TokenBucket.new(
+          per_minute: per_minute,
+          queue_name: queue_name,
+        )
 
         loop do
           token_bucket.produce
@@ -28,7 +30,7 @@ module Velveteen
 
       private
 
-      attr_reader :config, :per_minute, :routing_key, :stdout
+      attr_reader :config, :per_minute, :queue_name, :stdout
     end
   end
 end

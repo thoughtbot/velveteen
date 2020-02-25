@@ -1,2 +1,2 @@
-rate-limit: velveteen rate-limit velveteen-development velveteen-general-development 30
+rate-limit: velveteen rate-limit velveteen_general_tokens 30
 worker: velveteen work example/worker.rb RandomlyFail

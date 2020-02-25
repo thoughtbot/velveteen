@@ -3,7 +3,7 @@ module Velveteen
     def self.call(worker:)
       token_bucket = TokenBucket.new(
         per_minute: 600, # TODO: pull this from config
-        key: worker.rate_limit_key,
+        queue_name: worker.rate_limit_queue,
       )
       token_bucket.take
     end

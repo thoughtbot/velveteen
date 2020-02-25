@@ -3,7 +3,7 @@ require "json"
 
 connection = Bunny.new
 channel = connection.start.create_channel
-exchange = channel.topic("velveteen-development", durable: true)
+exchange = channel.topic("velveteen_development", durable: true)
 
 message_count = (ARGV.shift || 1).to_i
 

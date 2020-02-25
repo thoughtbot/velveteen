@@ -4,8 +4,7 @@ require "velveteen/worker"
 RSpec.describe Velveteen::Commands::RateLimit do
   it "produces tokens at an interval until interrupted" do
     argv = %w[
-      test-velveteen
-      test-rate-limit-key
+      test_rate_limit_queue
       300
     ]
     rate_limit = described_class.new(
@@ -31,7 +30,7 @@ RSpec.describe Velveteen::Commands::RateLimit do
     }.to raise_error(Interrupt)
 
     expect(Velveteen::TokenBucket).to have_received(:new).with(
-      key: "test-rate-limit-key",
+      queue_name: "test_rate_limit_queue",
       per_minute: 300,
     )
     expect(token_bucket).to have_received(:produce).twice
