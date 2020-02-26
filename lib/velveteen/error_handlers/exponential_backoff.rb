@@ -7,14 +7,14 @@ module Velveteen
         new(**kwargs).call
       end
 
-      def initialize(error:, message:, worker:)
+      def initialize(error:, message:, worker_class:)
         @error = error
         @message = message
-        @worker = worker
+        @worker_class = worker_class
       end
 
       def call
-        Velveteen.logger.error(worker.queue_name) do
+        Velveteen.logger.error(worker_class.queue_name) do
           "message '#{message.data}' failed - #{error.message}"
         end
 
@@ -31,15 +31,15 @@ module Velveteen
 
       private
 
-      attr_reader :error, :message, :worker
+      attr_reader :error, :message, :worker_class
 
       def set_up_error_queue
         queue = Config.channel.queue(
-          "#{worker.queue_name}_error",
+          "#{worker_class.queue_name}_error",
           durable: true,
         )
 
-        queue.bind(Config.dlx_exchange, routing_key: worker.routing_key)
+        queue.bind(Config.dlx_exchange, routing_key: worker_class.routing_key)
       end
 
       def retry?
@@ -55,17 +55,17 @@ module Velveteen
       end
 
       def retry_routing_key
-        "#{worker.routing_key}.#{delay}"
+        "#{worker_class.routing_key}.#{delay}"
       end
 
       def set_up_retry_queue
         queue = Config.queue_class.new(
           Config.channel,
-          "#{worker.queue_name}_retry_#{delay}",
+          "#{worker_class.queue_name}_retry_#{delay}",
           durable: true,
           arguments: {
             "x-dead-letter-exchange": Config.exchange_name,
-            "x-dead-letter-routing-key": worker.routing_key,
+            "x-dead-letter-routing-key": worker_class.routing_key,
             "x-message-ttl": delay * 1_000,
             "x-expires": delay * 1_000 * 2,
           }
@@ -85,7 +85,7 @@ module Velveteen
       def publish_error_message
         Config.dlx_exchange.publish(
           message.body,
-          routing_key: worker.routing_key,
+          routing_key: worker_class.routing_key,
           headers: message.headers,
         )
       end

@@ -3,7 +3,6 @@ require "velveteen/worker"
 RSpec.describe Velveteen::Worker do
   describe ".new" do
     it "raises an error when the incoming message does not match the schema" do
-      stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
       message = Velveteen::Message.new(data: {})
 
       expect {
@@ -14,7 +13,6 @@ RSpec.describe Velveteen::Worker do
 
   describe "#publish" do
     it "publishes the message" do
-      stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
       message = Velveteen::Message.new(data: {foo: "bar"}, headers: {})
       worker = TestPublishingWorker.new(message: message)
       queue = Velveteen::Config.channel.queue("")
@@ -30,7 +28,6 @@ RSpec.describe Velveteen::Worker do
     end
 
     it "passes along headers and appends new headers" do
-      stub_const("Velveteen::Worker::SCHEMA_DIRECTORY", "spec/schemas")
       message = Velveteen::Message.new(
         data: {foo: "bar"},
         headers: {baz: "qux"},

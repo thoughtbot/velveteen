@@ -2,8 +2,6 @@ require "json-schema"
 
 module Velveteen
   class Worker
-    SCHEMA_DIRECTORY = "app/message_schemas"
-
     attr_reader :message
 
     class << self
@@ -49,7 +47,7 @@ module Velveteen
 
     def message_schema
       if self.class.message_schema
-        File.expand_path(self.class.message_schema, SCHEMA_DIRECTORY)
+        File.expand_path(self.class.message_schema, Config.schema_directory)
       end
     end
 

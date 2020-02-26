@@ -17,7 +17,7 @@ RSpec.describe Velveteen::ErrorHandlers::ExponentialBackoff do
     )
     allow(Velveteen::Config.queue_class).to receive(:new).and_call_original
 
-    described_class.call(error: error, message: message, worker: worker)
+    described_class.call(error: error, message: message, worker_class: worker)
 
     expect(Velveteen::Config.queue_class).to have_received(:new).with(
       Velveteen::Config.channel,
@@ -57,7 +57,7 @@ RSpec.describe Velveteen::ErrorHandlers::ExponentialBackoff do
     )
     allow(Velveteen::Config.queue_class).to receive(:new).and_call_original
 
-    described_class.call(error: error, message: message, worker: worker)
+    described_class.call(error: error, message: message, worker_class: worker)
 
     expect(Velveteen::Config.queue_class).to have_received(:new).with(
       Velveteen::Config.channel,
@@ -94,7 +94,7 @@ RSpec.describe Velveteen::ErrorHandlers::ExponentialBackoff do
     error_queue = Velveteen::Config.channel.queue("foo_queue_error")
     allow(Velveteen::Config.queue_class).to receive(:new).and_call_original
 
-    described_class.call(error: error, message: message, worker: worker)
+    described_class.call(error: error, message: message, worker_class: worker)
 
     error_message = error_queue.pop
     expect(error_message).not_to eq([nil, nil, nil])

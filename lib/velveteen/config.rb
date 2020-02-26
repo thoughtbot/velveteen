@@ -3,7 +3,13 @@ require "velveteen/error_handlers"
 module Velveteen
   module Config
     class << self
-      attr_accessor :connection, :error_handler, :exchange_name, :queue_class
+      attr_accessor(
+        :connection,
+        :error_handler,
+        :exchange_name,
+        :queue_class,
+        :schema_directory,
+      )
     end
 
     def self.channel

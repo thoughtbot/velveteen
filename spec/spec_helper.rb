@@ -8,6 +8,7 @@ Velveteen.logger = Logger.new(IO::NULL)
 Velveteen::Config.connection = BunnyMock.new
 Velveteen::Config.exchange_name = "velveteen-test-exchange"
 Velveteen::Config.queue_class = BunnyMock::Queue
+Velveteen::Config.schema_directory = "spec/schemas"
 
 BunnyMock.use_bunny_queue_pop_api = true
 
