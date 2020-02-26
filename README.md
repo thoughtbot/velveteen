@@ -1,4 +1,4 @@
-# Velveteen
+# Velveteen [![Build Status](https://travis-ci.com/thoughtbot/velveteen.svg?branch=master)](https://travis-ci.com/thoughtbot/velveteen)
 
 🚧 A work in-progress 🚧
 
