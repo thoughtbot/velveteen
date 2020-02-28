@@ -27,7 +27,7 @@ RSpec.describe Velveteen::ErrorHandlers::ExponentialBackoff do
         "x-dead-letter-exchange": Velveteen::Config.exchange_name,
         "x-dead-letter-routing-key": "foo.key",
         "x-message-ttl": 1_000,
-        "x-expires": 2_000,
+        "x-expires": 2_000
       }
     )
     expect(exchange).to have_received(:publish).with(
@@ -67,7 +67,7 @@ RSpec.describe Velveteen::ErrorHandlers::ExponentialBackoff do
         "x-dead-letter-exchange": Velveteen::Config.exchange_name,
         "x-dead-letter-routing-key": "foo.key",
         "x-message-ttl": 25_000,
-        "x-expires": 50_000,
+        "x-expires": 50_000
       }
     )
     expect(exchange).to have_received(:publish).with(

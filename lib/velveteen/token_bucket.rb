@@ -11,7 +11,7 @@ module Velveteen
         queue_name,
         durable: true,
         arguments: {
-          "x-max-length" => 1,
+          "x-max-length" => 1
         }
       )
     end

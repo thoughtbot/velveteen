@@ -67,7 +67,7 @@ module Velveteen
             "x-dead-letter-exchange": Config.exchange_name,
             "x-dead-letter-routing-key": worker_class.routing_key,
             "x-message-ttl": delay * 1_000,
-            "x-expires": delay * 1_000 * 2,
+            "x-expires": delay * 1_000 * 2
           }
         )
 
