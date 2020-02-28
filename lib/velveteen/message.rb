@@ -3,8 +3,15 @@ module Velveteen
     :body,
     :data,
     :delivery_info,
-    :headers,
     :properties,
     keyword_init: true,
-  )
+  ) {
+    def headers
+      properties.headers
+    end
+
+    def metadata
+      headers.fetch(:metadata, {})
+    end
+  }
 end

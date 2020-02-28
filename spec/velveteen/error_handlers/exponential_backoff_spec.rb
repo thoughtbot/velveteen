@@ -8,7 +8,7 @@ RSpec.describe Velveteen::ErrorHandlers::ExponentialBackoff do
     message = Velveteen::Message.new(
       body: "foo-body",
       delivery_info: double(delivery_tag: "foo-tag"),
-      headers: {},
+      properties: double(headers: {}),
     )
     worker = instance_double(
       Velveteen::Worker,
@@ -48,7 +48,7 @@ RSpec.describe Velveteen::ErrorHandlers::ExponentialBackoff do
     message = Velveteen::Message.new(
       body: "foo-body",
       delivery_info: double(delivery_tag: "foo-tag"),
-      headers: {"x-death" => Array.new(4)},
+      properties: double(headers: {"x-death" => Array.new(4)}),
     )
     worker = instance_double(
       Velveteen::Worker,
@@ -84,7 +84,9 @@ RSpec.describe Velveteen::ErrorHandlers::ExponentialBackoff do
     message = Velveteen::Message.new(
       body: "foo-body",
       delivery_info: double(delivery_tag: "foo-tag"),
-      headers: {"x-death" => Array.new(described_class::MAXIMUM_RETRIES)},
+      properties: double(
+        headers: {"x-death" => Array.new(described_class::MAXIMUM_RETRIES)}
+      ),
     )
     worker = instance_double(
       Velveteen::Worker,

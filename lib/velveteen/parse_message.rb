@@ -7,7 +7,6 @@ module Velveteen
         body: body,
         data: data,
         delivery_info: delivery_info,
-        headers: properties.headers,
         properties: properties,
       )
     rescue JSON::ParserError => e
