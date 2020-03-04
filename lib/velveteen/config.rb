@@ -8,7 +8,7 @@ module Velveteen
         :error_handler,
         :exchange_name,
         :queue_class,
-        :schema_directory,
+        :schema_directory
       )
     end
 

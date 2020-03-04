@@ -11,7 +11,7 @@ RSpec.describe Velveteen::ParseMessage do
     message = described_class.call(
       body: body,
       delivery_info: delivery_info,
-      properties: properties,
+      properties: properties
     )
 
     expect(message.data).to eq(foo: "bar")
@@ -26,7 +26,7 @@ RSpec.describe Velveteen::ParseMessage do
       described_class.call(
         body: "invalid json",
         delivery_info: double,
-        properties: double,
+        properties: double
       )
     }.to raise_error do |error|
       expect(error).to be_a(Velveteen::InvalidMessage)

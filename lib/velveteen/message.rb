@@ -5,6 +5,6 @@ module Velveteen
     :delivery_info,
     :headers,
     :properties,
-    keyword_init: true,
+    keyword_init: true
   )
 end

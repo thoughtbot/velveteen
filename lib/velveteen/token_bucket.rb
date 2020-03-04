@@ -19,7 +19,7 @@ module Velveteen
     def produce
       queue.publish(
         Time.now.utc.iso8601,
-        routing_key: queue_name,
+        routing_key: queue_name
       )
     end
 

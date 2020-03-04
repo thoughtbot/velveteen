@@ -18,7 +18,7 @@ RSpec.describe Velveteen::Worker do
       queue = Velveteen::Config.channel.queue("")
       queue.bind(
         Velveteen::Config.exchange,
-        routing_key: "velveteen.test.publish",
+        routing_key: "velveteen.test.publish"
       )
 
       worker.perform
@@ -30,14 +30,14 @@ RSpec.describe Velveteen::Worker do
     it "passes along headers and appends new headers" do
       message = Velveteen::Message.new(
         data: {foo: "bar"},
-        headers: {baz: "qux"},
+        headers: {baz: "qux"}
       )
       worker = TestPublishingWorker.new(message: message)
       worker.test_headers = {name: "fred"}
       queue = Velveteen::Config.channel.queue("")
       queue.bind(
         Velveteen::Config.exchange,
-        routing_key: "velveteen.test.publish",
+        routing_key: "velveteen.test.publish"
       )
 
       worker.perform
@@ -58,7 +58,7 @@ RSpec.describe Velveteen::Worker do
       publish(
         message.data.to_json,
         headers: test_headers || {},
-        routing_key: "velveteen.test.publish",
+        routing_key: "velveteen.test.publish"
       )
     end
   end

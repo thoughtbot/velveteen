@@ -8,7 +8,7 @@ module Velveteen
         data: data,
         delivery_info: delivery_info,
         headers: properties.headers,
-        properties: properties,
+        properties: properties
       )
     rescue JSON::ParserError => e
       raise InvalidMessage.new(e)

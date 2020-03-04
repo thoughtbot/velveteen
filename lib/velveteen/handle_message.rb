@@ -16,7 +16,7 @@ module Velveteen
       Config.error_handler.call(
         error: error,
         message: message,
-        worker_class: worker_class,
+        worker_class: worker_class
       )
     end
   end

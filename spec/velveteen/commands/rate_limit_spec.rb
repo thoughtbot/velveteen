@@ -9,12 +9,12 @@ RSpec.describe Velveteen::Commands::RateLimit do
     ]
     rate_limit = described_class.new(
       argv: argv,
-      stdout: StringIO.new,
+      stdout: StringIO.new
     )
     token_bucket = instance_double(
       Velveteen::TokenBucket,
       produce: true,
-      duration: 0.2,
+      duration: 0.2
     )
     allow(Velveteen::TokenBucket).to receive(:new).and_return(token_bucket)
     call_count = 0
@@ -31,7 +31,7 @@ RSpec.describe Velveteen::Commands::RateLimit do
 
     expect(Velveteen::TokenBucket).to have_received(:new).with(
       queue_name: "test_rate_limit_queue",
-      per_minute: 300,
+      per_minute: 300
     )
     expect(token_bucket).to have_received(:produce).twice
     expect(rate_limit).to have_received(:sleep).with(0.2).twice

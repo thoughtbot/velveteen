@@ -10,18 +10,18 @@ RSpec.describe Velveteen::HandleMessage do
     worker_instance = instance_double(
       TestWorker,
       perform: true,
-      rate_limited?: false,
+      rate_limited?: false
     )
     allow(TestWorker).to receive(:new).and_return(worker_instance)
     allow(Velveteen::TakeToken).to receive(:call)
     message = instance_double(
       Velveteen::Message,
-      delivery_info: double(delivery_tag: double),
+      delivery_info: double(delivery_tag: double)
     )
 
     described_class.call(
       message: message,
-      worker_class: TestWorker,
+      worker_class: TestWorker
     )
 
     expect(Velveteen::TakeToken)
@@ -33,13 +33,13 @@ RSpec.describe Velveteen::HandleMessage do
     worker_instance = instance_double(
       TestWorker,
       perform: true,
-      rate_limited?: true,
+      rate_limited?: true
     )
     allow(TestWorker).to receive(:new).and_return(worker_instance)
     allow(Velveteen::TakeToken).to receive(:call)
     message = instance_double(
       Velveteen::Message,
-      delivery_info: double(delivery_tag: double),
+      delivery_info: double(delivery_tag: double)
     )
     allow(TestWorker).to receive(:new).and_return(worker_instance)
     allow(Velveteen::TakeToken).to receive(:call)

@@ -19,7 +19,7 @@ module Velveteen
         stdout.puts "CTRL+C to stop"
         token_bucket = TokenBucket.new(
           per_minute: per_minute,
-          queue_name: queue_name,
+          queue_name: queue_name
         )
 
         loop do

@@ -15,11 +15,11 @@ module Velveteen
         message = ParseMessage.call(
           body: body,
           delivery_info: delivery_info,
-          properties: properties,
+          properties: properties
         )
         HandleMessage.call(
           message: message,
-          worker_class: worker_class,
+          worker_class: worker_class
         )
       end
 

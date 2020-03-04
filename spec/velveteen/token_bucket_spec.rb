@@ -23,7 +23,7 @@ RSpec.describe Velveteen::TokenBucket do
         queue = Velveteen::Config.channel.queue(queue_name)
         token_bucket = described_class.new(
           queue_name: queue_name,
-          per_minute: per_minute,
+          per_minute: per_minute
         )
 
         token_bucket.produce
@@ -46,7 +46,7 @@ RSpec.describe Velveteen::TokenBucket do
       allow(Velveteen::Config).to receive(:channel).and_return(channel)
       token_bucket = described_class.new(
         queue_name: queue_name,
-        per_minute: per_minute,
+        per_minute: per_minute
       )
       allow(queue).to receive(:pop).and_return([nil, nil, nil], [delivery_info, {}, "Token"])
       allow(channel).to receive(:basic_ack)

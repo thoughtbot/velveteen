@@ -36,7 +36,7 @@ module Velveteen
       def set_up_error_queue
         queue = Config.channel.queue(
           "#{worker_class.queue_name}_error",
-          durable: true,
+          durable: true
         )
 
         queue.bind(Config.dlx_exchange, routing_key: worker_class.routing_key)
@@ -78,7 +78,7 @@ module Velveteen
         Config.exchange.publish(
           message.body,
           routing_key: retry_routing_key,
-          headers: message.headers,
+          headers: message.headers
         )
       end
 
@@ -86,7 +86,7 @@ module Velveteen
         Config.dlx_exchange.publish(
           message.body,
           routing_key: worker_class.routing_key,
-          headers: message.headers,
+          headers: message.headers
         )
       end
     end
