@@ -45,6 +45,25 @@ RSpec.describe Velveteen::Worker do
       _, properties, _ = queue.pop
       expect(properties[:headers]).to eq(baz: "qux", name: "fred")
     end
+
+    it "does not pass along reserved RabbitMQ headers" do
+      message = Velveteen::Message.new(
+        data: {foo: "bar"},
+        headers: {"x-death": [{count: 1}]}
+      )
+      worker = TestPublishingWorker.new(message: message)
+      worker.test_headers = {foo: "bar"}
+      queue = Velveteen::Config.channel.queue("")
+      queue.bind(
+        Velveteen::Config.exchange,
+        routing_key: "velveteen.test.publish"
+      )
+
+      worker.perform
+
+      _, properties, _ = queue.pop
+      expect(properties[:headers]).to eq(foo: "bar")
+    end
   end
 
   class TestSchemaWorker < described_class

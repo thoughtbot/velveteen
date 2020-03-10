@@ -2,6 +2,8 @@ require "json-schema"
 
 module Velveteen
   class Worker
+    IGNORED_HEADERS = ["x-death"].freeze
+
     attr_reader :message
 
     class << self
@@ -41,7 +43,7 @@ module Velveteen
     end
 
     def publish(payload, options = {})
-      options[:headers] = message.headers.merge(options.fetch(:headers, {}))
+      options[:headers] = build_headers(options)
       Config.exchange.publish(payload, options)
     end
 
@@ -59,6 +61,14 @@ module Velveteen
           raise InvalidMessage, errors.join("\n")
         end
       end
+    end
+
+    def build_headers(options)
+      forwardable_headers.merge(options.fetch(:headers, {}))
+    end
+
+    def forwardable_headers
+      message.headers.reject { |key, _| IGNORED_HEADERS.include?(key.to_s) }
     end
   end
 end
