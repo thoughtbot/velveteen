@@ -1,6 +1,9 @@
 # Velveteen [![Build Status](https://travis-ci.com/thoughtbot/velveteen.svg?branch=master)](https://travis-ci.com/thoughtbot/velveteen)
 
-Transform your background jobs into a real data pipeline with Velveteen.
+Transform your background jobs into a real data pipeline, like _[The Velveteen
+Rabbit]_.
+
+[The Velveteen Rabbit]: https://en.wikipedia.org/wiki/The Velveteen Rabbit
 
 ## About
 
