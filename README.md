@@ -60,9 +60,11 @@ Within the worker, you have access to the following:
 
 * `message` - A representation of the Rabbit message, which responds to:
   * `body` - the raw message body
-  * `data` - the parsed JSON representation of the body
+  * `data` - the parsed JSON representation of the body - hashes will have
+    string keys
   * `delivery_info` - the delivery info from Rabbit
-  * `headers` - the headers from Rabbit, from `properties.headers`
+  * `headers` - the headers from Rabbit, from `properties.headers` - hashes will
+    have string keys
   * `properties` - the properties Rabbit
 * `publish(payload, [options])` - Publishes the message to the exchange
   * `payload` - the message body

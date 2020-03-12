@@ -1,7 +1,7 @@
 module Velveteen
   class ParseMessage
     def self.call(body:, delivery_info:, properties:)
-      data = JSON.parse(body, symbolize_names: true)
+      data = JSON.parse(body)
 
       Message.new(
         body: body,

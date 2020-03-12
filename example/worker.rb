@@ -11,7 +11,7 @@ class RandomlyFail < Velveteen::Worker
   self.rate_limit_queue = "velveteen_general_tokens"
 
   def perform
-    if message.data[:job].even? && rand > 0.5
+    if message.data["job"].even? && rand > 0.5
       raise "Randomly failed"
     else
       logger.info(

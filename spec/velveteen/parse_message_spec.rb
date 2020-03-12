@@ -14,7 +14,7 @@ RSpec.describe Velveteen::ParseMessage do
       properties: properties
     )
 
-    expect(message.data).to eq(foo: "bar")
+    expect(message.data).to eq("foo" => "bar")
     expect(message.headers).to eq(headers)
     expect(message.body).to eq(body)
     expect(message.delivery_info).to eq(delivery_info)

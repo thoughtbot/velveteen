@@ -13,7 +13,7 @@ RSpec.describe Velveteen::Worker do
 
   describe "#publish" do
     it "publishes the message" do
-      message = Velveteen::Message.new(data: {foo: "bar"}, headers: {})
+      message = Velveteen::Message.new(data: {"foo" => "bar"}, headers: {})
       worker = TestPublishingWorker.new(message: message)
       queue = Velveteen::Config.channel.queue("")
       queue.bind(
@@ -29,11 +29,11 @@ RSpec.describe Velveteen::Worker do
 
     it "passes along headers and appends new headers" do
       message = Velveteen::Message.new(
-        data: {foo: "bar"},
-        headers: {baz: "qux"}
+        data: {"foo" => "bar"},
+        headers: {"baz" => "qux"}
       )
       worker = TestPublishingWorker.new(message: message)
-      worker.test_headers = {name: "fred"}
+      worker.test_headers = {"name" => "fred"}
       queue = Velveteen::Config.channel.queue("")
       queue.bind(
         Velveteen::Config.exchange,
@@ -43,16 +43,16 @@ RSpec.describe Velveteen::Worker do
       worker.perform
 
       _, properties, _ = queue.pop
-      expect(properties[:headers]).to eq(baz: "qux", name: "fred")
+      expect(properties[:headers]).to eq("baz" => "qux", "name" => "fred")
     end
 
     it "does not pass along reserved RabbitMQ headers" do
       message = Velveteen::Message.new(
-        data: {foo: "bar"},
-        headers: {"x-death": [{count: 1}]}
+        data: {"foo" => "bar"},
+        headers: {"x-death" => [{"count" => 1}]}
       )
       worker = TestPublishingWorker.new(message: message)
-      worker.test_headers = {foo: "bar"}
+      worker.test_headers = {"foo" => "bar"}
       queue = Velveteen::Config.channel.queue("")
       queue.bind(
         Velveteen::Config.exchange,
@@ -62,7 +62,7 @@ RSpec.describe Velveteen::Worker do
       worker.perform
 
       _, properties, _ = queue.pop
-      expect(properties[:headers]).to eq(foo: "bar")
+      expect(properties[:headers]).to eq("foo" => "bar")
     end
   end
 
