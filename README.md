@@ -16,6 +16,11 @@ out the pipeline in a maintainable way.
 ## 🚧 A work in-progress 🚧
 
 Prior to version 1.0, minor version updates are susceptible to breaking changes.
+thoughtbottles, you may also be interested in [Bazooka], an application which
+is testing out the use of Velveteen for further development needs. It is
+internal to thoughtbot.
+
+[Bazooka]: https://github.com/thoughtbot/bazooka/
 
 ## Getting started
 
