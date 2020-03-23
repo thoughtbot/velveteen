@@ -8,7 +8,8 @@ module Velveteen
         :error_handler,
         :exchange_name,
         :queue_class,
-        :schema_directory
+        :schema_directory,
+        :worker_timeout
       )
     end
 
@@ -30,5 +31,6 @@ module Velveteen
     end
 
     self.error_handler = ErrorHandlers::Reject
+    self.worker_timeout = 10
   end
 end
