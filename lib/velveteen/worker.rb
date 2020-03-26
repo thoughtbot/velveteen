@@ -43,8 +43,25 @@ module Velveteen
     end
 
     def publish(payload, options = {})
+      validate_payload!(payload, options[:routing_key])
       options[:headers] = build_headers(options)
       Config.exchange.publish(payload, options)
+    end
+
+    def validate_payload!(payload, routing_key)
+      errors = JSON::Validator.fully_validate(
+        generate_schema(routing_key),
+        payload
+      )
+
+      if errors.any?
+        raise InvalidMessage, errors.join("\n")
+      end
+    end
+
+    def generate_schema(routing_key)
+      schema_file_path = routing_key + ".json"
+      File.expand_path(schema_file_path, Config.schema_directory)
     end
 
     def message_schema

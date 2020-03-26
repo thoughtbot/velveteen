@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "required": ["tea"],
+  "properties": {
+    "boba": {
+      "type": "string"
+    }
+  }
+}

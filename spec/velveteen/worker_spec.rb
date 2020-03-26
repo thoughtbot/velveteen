@@ -15,7 +15,7 @@ RSpec.describe Velveteen::Worker do
     it "publishes the message" do
       message = Velveteen::Message.new(data: {"foo" => "bar"}, headers: {})
       worker = TestPublishingWorker.new(message: message)
-      queue = Velveteen::Config.channel.queue("")
+      queue = Velveteen::Config.channel.queue
       queue.bind(
         Velveteen::Config.exchange,
         routing_key: "velveteen.test.publish"
@@ -34,7 +34,7 @@ RSpec.describe Velveteen::Worker do
       )
       worker = TestPublishingWorker.new(message: message)
       worker.test_headers = {"name" => "fred"}
-      queue = Velveteen::Config.channel.queue("")
+      queue = Velveteen::Config.channel.queue
       queue.bind(
         Velveteen::Config.exchange,
         routing_key: "velveteen.test.publish"
@@ -53,7 +53,7 @@ RSpec.describe Velveteen::Worker do
       )
       worker = TestPublishingWorker.new(message: message)
       worker.test_headers = {"foo" => "bar"}
-      queue = Velveteen::Config.channel.queue("")
+      queue = Velveteen::Config.channel.queue
       queue.bind(
         Velveteen::Config.exchange,
         routing_key: "velveteen.test.publish"
@@ -63,6 +63,52 @@ RSpec.describe Velveteen::Worker do
 
       _, properties, _ = queue.pop
       expect(properties[:headers]).to eq("foo" => "bar")
+    end
+
+    describe "payload validation" do
+      it "raises an error when payload does not match schema" do
+        message = Velveteen::Message.new(
+          data: {"foo" => "bar"},
+          headers: {}
+        )
+        invalid_payload = {
+          data: {"coffee" => "espresso"},
+          headers: {}
+        }
+        worker = TestValidatesPayloadWorker.new(
+          message: message,
+          payload: invalid_payload
+        )
+
+        expect {
+          worker.perform
+        }.to raise_error(Velveteen::InvalidMessage, /tea/)
+      end
+
+      it "publishes when payload matches routing key schema" do
+        message = Velveteen::Message.new(
+          data: {"foo" => "bar"},
+          headers: {}
+        )
+        payload = {
+          data: {"tea" => "boba"},
+          headers: {}
+        }
+        worker = TestValidatesPayloadWorker.new(
+          message: message,
+          payload: payload
+        )
+        queue = Velveteen::Config.channel.queue
+        queue.bind(
+          Velveteen::Config.exchange,
+          routing_key: "worker.test.tea.ordered"
+        )
+
+        worker.perform
+
+        _, _, body = queue.pop
+        expect(body).to eq('{"tea":"boba"}')
+      end
     end
   end
 
@@ -78,6 +124,23 @@ RSpec.describe Velveteen::Worker do
         message.data.to_json,
         headers: test_headers || {},
         routing_key: "velveteen.test.publish"
+      )
+    end
+  end
+
+  class TestValidatesPayloadWorker < described_class
+    attr_reader :payload
+
+    def initialize(message:, payload: nil)
+      super(message: message)
+      @payload = payload
+    end
+
+    def perform
+      publish(
+        payload[:data].to_json,
+        headers: payload[:headers],
+        routing_key: "worker.test.tea.ordered"
       )
     end
   end
