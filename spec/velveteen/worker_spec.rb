@@ -113,7 +113,7 @@ RSpec.describe Velveteen::Worker do
   end
 
   class TestSchemaWorker < described_class
-    self.message_schema = "test-schema-worker.json"
+    self.routing_key = "velveteen.test.publish"
   end
 
   class TestPublishingWorker < described_class
