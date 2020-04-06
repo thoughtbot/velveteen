@@ -118,6 +118,7 @@ RSpec.describe Velveteen::Worker do
 
   class TestPublishingWorker < described_class
     attr_accessor :test_headers
+    self.routing_key = "velveteen.test.publish"
 
     def perform
       publish(
@@ -130,6 +131,7 @@ RSpec.describe Velveteen::Worker do
 
   class TestValidatesPayloadWorker < described_class
     attr_reader :payload
+    self.routing_key = "velveteen.test.publish"
 
     def initialize(message:, payload: nil)
       super(message: message)

@@ -13,7 +13,7 @@ module Velveteen
     def initialize(message:)
       @message = message
 
-      maybe_validate_message!
+      validate_message!
     end
 
     def self.queue_name
@@ -64,14 +64,12 @@ module Velveteen
       File.expand_path(schema_file_path, Config.schema_directory)
     end
 
-    def maybe_validate_message!
-      if routing_key
-        schema = generate_schema(routing_key)
-        errors = JSON::Validator.fully_validate(schema, message.data)
+    def validate_message!
+      schema = generate_schema(routing_key)
+      errors = JSON::Validator.fully_validate(schema, message.data)
 
-        if errors.any?
-          raise InvalidMessage, errors.join("\n")
-        end
+      if errors.any?
+        raise InvalidMessage, errors.join("\n")
       end
     end
 

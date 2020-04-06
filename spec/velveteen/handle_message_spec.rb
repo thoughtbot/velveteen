@@ -7,12 +7,16 @@ RSpec.describe Velveteen::HandleMessage do
   end
 
   class FailingWorker < Velveteen::Worker
+    self.routing_key = "velveteen.test.publish"
+
     def perform
       raise "Failed"
     end
   end
 
   class StuckWorker < Velveteen::Worker
+    self.routing_key = "velveteen.test.publish"
+
     def perform
       sleep 1
     end
@@ -72,6 +76,7 @@ RSpec.describe Velveteen::HandleMessage do
       Velveteen::Message,
       delivery_info: double(delivery_tag: double)
     )
+    allow(message).to receive(:data).and_return({foo: "bar"})
 
     described_class.call(message: message, worker_class: FailingWorker)
 
@@ -92,6 +97,7 @@ RSpec.describe Velveteen::HandleMessage do
       Velveteen::Message,
       delivery_info: double(delivery_tag: double)
     )
+    allow(message).to receive(:data).and_return({foo: "bar"})
 
     described_class.call(message: message, worker_class: StuckWorker)
 
