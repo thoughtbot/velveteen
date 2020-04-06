@@ -7,13 +7,13 @@ module Velveteen
     attr_reader :message
 
     class << self
-      attr_accessor :message_schema, :rate_limit_queue, :routing_key
+      attr_accessor :rate_limit_queue, :routing_key
     end
 
     def initialize(message:)
       @message = message
 
-      maybe_validate_message!
+      validate_message!
     end
 
     def self.queue_name
@@ -64,19 +64,12 @@ module Velveteen
       File.expand_path(schema_file_path, Config.schema_directory)
     end
 
-    def message_schema
-      if self.class.message_schema
-        File.expand_path(self.class.message_schema, Config.schema_directory)
-      end
-    end
+    def validate_message!
+      schema = generate_schema(routing_key)
+      errors = JSON::Validator.fully_validate(schema, message.data)
 
-    def maybe_validate_message!
-      if message_schema
-        errors = JSON::Validator.fully_validate(message_schema, message.data)
-
-        if errors.any?
-          raise InvalidMessage, errors.join("\n")
-        end
+      if errors.any?
+        raise InvalidMessage, errors.join("\n")
       end
     end
 

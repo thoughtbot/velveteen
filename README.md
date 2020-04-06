@@ -99,14 +99,14 @@ When using Velveteen in particular, try to follow:
 
 ## Message validation
 
-Velveteen can validate incoming messages with a JSON Schema.
+Velveteen can validate incoming messages with a JSON Schema. The schema that we use has a file path that matches the routing key.
 
 ```ruby
 Velveteen::Config.schema_directory = "app/schemas"
 
 class FetchUserCommits < Velveteen::Worker
   ...
-  self.message_schema = "fetch_user_commits.json"
+  self.routing_key = "velveteen.fetch_user_commits"
 
   def perform
     # do something with the GitHub API

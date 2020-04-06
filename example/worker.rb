@@ -7,7 +7,6 @@ Velveteen::Config.schema_directory = "example/schemas"
 
 class RandomlyFail < Velveteen::Worker
   self.routing_key = "velveteen.fail.randomly"
-  self.message_schema = "randomly_fail.json"
   self.rate_limit_queue = "velveteen_general_tokens"
 
   def perform
