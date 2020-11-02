@@ -6,6 +6,6 @@ gemspec
 gem "bunny-mock"
 gem "pry-byebug"
 gem "rake", "~> 13.0"
-gem "rspec", "~> 3.0"
+gem "rspec", "~> 3.10"
 gem "standard"
 gem "timecop"
