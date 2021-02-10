@@ -63,7 +63,7 @@ GEM
     standard (0.2.3)
       rubocop (~> 0.80.1)
       rubocop-performance (~> 1.5.2)
-    timecop (0.9.1)
+    timecop (0.9.4)
     unicode-display_width (1.6.1)
 
 PLATFORMS
