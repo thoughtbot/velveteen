@@ -1,0 +1,31 @@
+version: 2
+registries:
+  rubygems-server-gems-graphql-pro:
+    type: rubygems-server
+    url: https://gems.graphql.pro
+    username: "${{secrets.RUBYGEMS_SERVER_GEMS_GRAPHQL_PRO_USERNAME}}"
+    password: "${{secrets.RUBYGEMS_SERVER_GEMS_GRAPHQL_PRO_PASSWORD}}"
+
+updates:
+- package-ecosystem: bundler
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "08:00"
+    timezone: America/New_York
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: standard
+    versions:
+    - 0.11.0
+    - 0.12.0
+    - 0.13.0
+    - 1.0.0
+    - 1.0.1
+    - 1.0.4
+  - dependency-name: timecop
+    versions:
+    - 0.9.2
+    - 0.9.3
+  registries:
+  - rubygems-server-gems-graphql-pro
